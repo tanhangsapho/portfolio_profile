@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github } from 'lucide-react';
-
+import { Github } from 'lucide-react';
+import Image from 'next/image';
 interface Project {
   id: number;
   title: string;
@@ -66,7 +66,9 @@ export const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     >
       {/* Image Container */}
       <div className="relative h-48 w-full overflow-hidden">
-        <img
+        <Image
+        width={500}
+        height={500}
           src={project.imageUrl}
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"

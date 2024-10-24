@@ -1,4 +1,3 @@
-// components/FloatingButton.tsx
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Sun, Moon, Github } from 'lucide-react';
@@ -64,14 +63,6 @@ const FloatingButton = () => {
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
-    // Add your dark mode logic here
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
   };
 
   const handleGitHubClick = () => {

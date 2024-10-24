@@ -1,12 +1,9 @@
 "use client";
-import { FC, useState, useEffect, useRef } from "react";
+import {  useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import { motion, useInView } from "framer-motion";
 import {
   Github,
-  Linkedin,
-  Mail,
-  FileText,
   Eye,
 } from "lucide-react";
 import { ProjectCard } from "@/components/card/projectCard";
@@ -36,7 +33,7 @@ const projects: Project[] = [
     id: 1,
     title: "Chekromlek",
     description:
-      "Full-stack e-commerce solution with real-time inventory management.",
+      `"Chekromlek" is a social media platform dedicated to sharing creative projects. It provides a user-friendly interface for artists, designers, and entrepreneurs to showcase their work, connect with others, and inspire a global community of creators.`,
     technologies: ["Next.js", "TypeScript", "MongoDB"],
     imageUrl: "https://my-image-storage-bucket-1234.s3.us-east-1.amazonaws.com/photo_2024-10-24_14-26-12.jpg",
     projectUrl: "https://project-url.com",
@@ -49,7 +46,8 @@ const skills: Skill[] = [
   { name: "React/Next.js", level: 4, category: "Frontend" },
   { name: "Tailwind CSS", level: 4, category: "Frontend" },
   { name: "Node.js", level: 4.5, category: "Backend" },
-  { name: "PostgreSQL", level: 4, category: "Backend" },
+  { name: "ExpressJs", level: 4, category: "Backend" },
+  { name: "NestJs", level: 3.5, category: "Backend" },
   { name: "AWS", level: 2, category: "Cloud" },
   { name: "Docker", level: 4, category: "Tools" },
   { name: "Git", level: 4.5, category: "Tools" },
@@ -93,7 +91,7 @@ const Home: React.FC = () => {
   const CV_URL = "https://drive.google.com/file/d/1OunQR9djK8CL5V0SFJoBCncjCH6gYLnX/view?usp=sharing";
   const projectsRef = useRef(null);
   const isProjectsInView = useInView(projectsRef, { once: true, amount: 0.2 });
-
+  console.log(activeSection)
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["home", "projects", "skills", "contact"];
@@ -200,7 +198,7 @@ const Home: React.FC = () => {
             className="max-w-2xl mx-auto text-center"
           >
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Let's Connect
+              Let`s Connect
             </h2>
             <p className="text-xl text-gray-600 mb-8">
               Open to new opportunities and interesting projects.

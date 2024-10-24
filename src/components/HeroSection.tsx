@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Mail, Download, ChevronDown, Github, Eye } from "lucide-react";
-
+import {ChevronDown, Eye } from "lucide-react";
+import Image from "next/image";
 const HeroSection = () => {
   const technologies = [
     "React",
@@ -48,7 +48,7 @@ const HeroSection = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
               >
-                Hi, I'm{" "}
+                Hi, I`m
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                   Tan Hangsapho
                 </span>
@@ -124,7 +124,9 @@ const HeroSection = () => {
             <div className="relative max-w-md mx-auto">
               {/* Profile Image Container */}
               <div className="relative aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 shadow-2xl">
-                <img
+                <Image
+                  width={"500"}
+                  height={"500"}
                   src="https://my-image-storage-bucket-1234.s3.us-east-1.amazonaws.com/photo_2024-10-24_10-59-48.jpg"
                   alt="Profile"
                   className="w-full h-full object-cover"
@@ -169,7 +171,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.6, duration: 0.8 }}
-          className="absolute -bottom-10 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
+          className="absolute -bottom-0 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}
