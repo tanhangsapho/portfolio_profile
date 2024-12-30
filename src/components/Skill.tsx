@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { SkillCard } from "@/components/card/skillcard";
+import SkillCard from "@/components/card/skillcard";
 
 const SkillSection = () => {
   const skillsRef = useRef(null);
@@ -31,7 +31,6 @@ const SkillSection = () => {
       { name: "Figma", proficiency: 80 },
     ],
   };
-  console.log("Hello, World!");
 
   return (
     <>

@@ -39,4 +39,4 @@ const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
   );
 };
 
-export { SkillCard };
+export default SkillCard;

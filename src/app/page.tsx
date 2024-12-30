@@ -8,7 +8,7 @@ import { ContactSection } from "@/components/Contact";
 import SkillSection from "@/components/Skill";
 import { Project } from "@/components/Project";
 
-const Home: React.FC = () => {
+const Home = () => {
   const [activeSection, setActiveSection] = useState("home");
   console.log(activeSection);
   useEffect(() => {
