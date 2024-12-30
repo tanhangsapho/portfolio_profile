@@ -126,7 +126,7 @@ const HeroSection = () => {
     scene.add(lines);
 
     camera.position.z = 40;
-    const targetCameraPos = new THREE.Vector3(0, 0, 40);
+    // const targetCameraPos = new THREE.Vector3(0, 0, 40);
 
     // Enhanced mouse interaction
     const handleMouseMove = (event: MouseEvent) => {
@@ -148,11 +148,11 @@ const HeroSection = () => {
         .array as Float32Array;
       for (let i = 0; i < particlesCount; i++) {
         const idx = i * 3;
-        const radius = Math.sqrt(
-          positions[idx] ** 2 +
-            positions[idx + 1] ** 2 +
-            positions[idx + 2] ** 2
-        );
+        // const radius = Math.sqrt(
+        //   positions[idx] ** 2 +
+        //     positions[idx + 1] ** 2 +
+        //     positions[idx + 2] ** 2
+        // );
 
         // Rotate particles in different orbits
         const angle = speeds[i] * performance.now() * 0.001;
@@ -267,9 +267,9 @@ const HeroSection = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
               >
-                Hi, I'm{" "}
+                Hi, I&apos;m{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                  Your Name
+                  Tan hangsapho
                 </span>
               </motion.h1>
 
