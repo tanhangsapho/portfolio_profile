@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import SkillCard from "@/components/card/skillcard";
+import { SkillCard } from "./card/skillcard";
 
 const SkillSection = () => {
   const skillsRef = useRef(null);

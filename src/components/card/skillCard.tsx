@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { SkillCardProps } from "../type";
 
-const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
+export const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
   return (
     <motion.div
       className="bg-white p-6 rounded-xl shadow-lg"
@@ -38,5 +38,3 @@ const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
     </motion.div>
   );
 };
-
-export default SkillCard;
