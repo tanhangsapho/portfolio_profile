@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import {Nunito} from "next/font/google"
+import { Nunito } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/darkmode/theme-provider";
 
 export const metadata: Metadata = {
   title: "Tan hangsapho",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 const font = Nunito({
   subsets: ["latin"],
-})
+});
 
 export default function RootLayout({
   children,
@@ -19,7 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${font.className}`}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

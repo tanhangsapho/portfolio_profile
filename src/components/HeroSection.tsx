@@ -5,7 +5,9 @@ import Image from "next/image";
 import * as THREE from "three";
 
 const HeroSection = () => {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationFrameRef = useRef<number>();
+
   const technologies = [
     "React",
     "TypeScript",
@@ -14,176 +16,188 @@ const HeroSection = () => {
     "AWS",
     "PostgreSQL",
   ];
-
   useEffect(() => {
     if (!canvasRef.current) return;
 
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      75,
+      60,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
+    camera.position.z = 30;
+
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
-      alpha: true,
       antialias: true,
+      alpha: true,
     });
-
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(window.devicePixelRatio);
 
-    // Particles setup
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 100;
-    const positions = new Float32Array(particlesCount * 3);
-    const colors = new Float32Array(particlesCount * 3);
+    // Create DNA strands
+    const createStrand = () => {
+      const points: THREE.Vector3[] = [];
+      const radius = 8;
+      const height = 40;
+      const turns = 3;
+      const pointsPerTurn = 30;
+      const totalPoints = turns * pointsPerTurn;
 
-    // Create random positions and colors for particles
-    for (let i = 0; i < particlesCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 50; // x
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 50; // y
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 50; // z
+      for (let i = 0; i < totalPoints; i++) {
+        const angle = (i / pointsPerTurn) * Math.PI * 2;
+        const y = (i / totalPoints) * height - height / 2;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        points.push(new THREE.Vector3(x, y, z));
+      }
 
-      // Gradient colors from blue to purple
-      colors[i * 3] = 0.4 + Math.random() * 0.2; // R (blue-ish)
-      colors[i * 3 + 1] = 0.4 + Math.random() * 0.2; // G (purple-ish)
-      colors[i * 3 + 2] = 0.8 + Math.random() * 0.2; // B
-    }
+      return points;
+    };
 
-    particlesGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(positions, 3)
-    );
-    particlesGeometry.setAttribute(
-      "color",
-      new THREE.BufferAttribute(colors, 3)
-    );
-
-    // Custom shader material for particles
-    const particlesMaterial = new THREE.ShaderMaterial({
+    // Custom shader for glowing effect
+    const glowMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 },
+        color1: { value: new THREE.Color("#4a90e2") },
+        color2: { value: new THREE.Color("#9b51e0") },
+      },
       vertexShader: `
-        attribute vec3 color;
-        varying vec3 vColor;
+        varying vec2 vUv;
+        varying vec3 vPosition;
         void main() {
-          vColor = color;
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_Position = projectionMatrix * mvPosition;
-          gl_PointSize = 3.0 * (300.0 / -mvPosition.z);
+          vUv = uv;
+          vPosition = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = 3.0;
         }
       `,
       fragmentShader: `
-        varying vec3 vColor;
+        uniform float time;
+        uniform vec3 color1;
+        uniform vec3 color2;
+        varying vec2 vUv;
+        varying vec3 vPosition;
+        
         void main() {
-          float dist = length(gl_PointCoord - vec2(0.5));
-          if (dist > 0.5) discard;
-          gl_FragColor = vec4(vColor, 1.0);
+          float noise = sin(vPosition.y * 0.2 + time);
+          vec3 color = mix(color1, color2, noise * 0.5 + 0.5);
+          float alpha = 0.8 - distance(gl_PointCoord, vec2(0.5));
+          gl_FragColor = vec4(color, alpha);
         }
       `,
       transparent: true,
-      vertexColors: true,
+      blending: THREE.AdditiveBlending,
     });
 
-    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particles);
+    // Create multiple DNA strands
+    const strands: THREE.Points[] = [];
+    const strandCount = 3;
 
-    // Lines setup
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x8080ff,
-      transparent: true,
-      opacity: 0.2,
-    });
+    for (let i = 0; i < strandCount; i++) {
+      const points = createStrand();
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-    const lines = new THREE.Group();
-    scene.add(lines);
+      // Add random offset for each point
+      const positionAttribute = geometry.getAttribute("position");
+      const positions = positionAttribute.array;
+      for (let j = 0; j < positions.length; j += 3) {
+        positions[j] += (Math.random() - 0.5) * 0.5;
+        positions[j + 1] += (Math.random() - 0.5) * 0.5;
+        positions[j + 2] += (Math.random() - 0.5) * 0.5;
+      }
 
-    // Camera position
-    camera.position.z = 30;
+      const strand = new THREE.Points(geometry, glowMaterial.clone());
+      strand.rotation.x = Math.random() * Math.PI;
+      strand.rotation.z = i * (Math.PI / strandCount);
+      strands.push(strand);
+      scene.add(strand);
+
+      // Add connecting lines
+      const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+      const lineMaterial = new THREE.LineBasicMaterial({
+        color: 0x4a90e2,
+        transparent: true,
+        opacity: 0.2,
+      });
+      const line = new THREE.Line(lineGeometry, lineMaterial);
+      line.rotation.copy(strand.rotation);
+      scene.add(line);
+    }
 
     // Mouse interaction
     const mouse = new THREE.Vector2();
-    const windowHalf = {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    };
+    const targetRotation = new THREE.Vector2();
+    let isMouseMoving = false;
 
     const handleMouseMove = (event: MouseEvent) => {
-      mouse.x = (event.clientX - windowHalf.x) / windowHalf.x;
-      mouse.y = (event.clientY - windowHalf.y) / windowHalf.y;
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      targetRotation.x = mouse.y * 0.5;
+      targetRotation.y = mouse.x * 0.5;
+      isMouseMoving = true;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Animation
+    // Smooth animation
+    const clock = new THREE.Clock();
+    let currentRotation = new THREE.Vector2();
+
     const animate = () => {
-      requestAnimationFrame(animate);
+      const time = clock.getElapsedTime();
 
-      // Rotate particles slowly
-      particles.rotation.x += 0.0003;
-      particles.rotation.y += 0.0005;
-
-      // Move camera slightly based on mouse position
-      camera.position.x += (mouse.x * 2 - camera.position.x) * 0.05;
-      camera.position.y += (-mouse.y * 2 - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
-
-      // Update particle connections
-      lines.children.forEach((line) => line.removeFromParent());
-
-      const positions = particlesGeometry.attributes.position.array;
-      for (let i = 0; i < particlesCount; i++) {
-        const p1 = new THREE.Vector3(
-          positions[i * 3],
-          positions[i * 3 + 1],
-          positions[i * 3 + 2]
-        );
-
-        for (let j = i + 1; j < particlesCount; j++) {
-          const p2 = new THREE.Vector3(
-            positions[j * 3],
-            positions[j * 3 + 1],
-            positions[j * 3 + 2]
-          );
-
-          const distance = p1.distanceTo(p2);
-
-          if (distance < 10) {
-            const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-              p1,
-              p2,
-            ]);
-            const line = new THREE.Line(lineGeometry, lineMaterial);
-            lines.add(line);
-          }
-        }
+      // Smooth rotation
+      if (isMouseMoving) {
+        currentRotation.x += (targetRotation.x - currentRotation.x) * 0.05;
+        currentRotation.y += (targetRotation.y - currentRotation.y) * 0.05;
+      } else {
+        // Auto-rotation when no mouse movement
+        currentRotation.y += 0.001;
       }
 
+      strands.forEach((strand, i) => {
+        strand.rotation.x = currentRotation.x;
+        strand.rotation.y = currentRotation.y + i * (Math.PI / strandCount);
+
+        const material = strand.material as THREE.ShaderMaterial;
+        material.uniforms.time.value = time;
+      });
+
       renderer.render(scene, camera);
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
-    // Handle window resize
+    // Handle resize
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      windowHalf.x = window.innerWidth / 2;
-      windowHalf.y = window.innerHeight / 2;
     };
 
     window.addEventListener("resize", handleResize);
+
+    // Reset mouse movement flag periodically
+    setInterval(() => {
+      isMouseMoving = false;
+    }, 3000);
 
     animate();
 
     // Cleanup
     return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
-      scene.remove(particles);
-      scene.remove(lines);
-      particlesGeometry.dispose();
-      particlesMaterial.dispose();
+
+      strands.forEach((strand) => {
+        strand.geometry.dispose();
+        (strand.material as THREE.ShaderMaterial).dispose();
+      });
       renderer.dispose();
     };
   }, []);
@@ -194,8 +208,7 @@ const HeroSection = () => {
         ref={canvasRef}
         className="absolute inset-0 w-full h-full -z-10"
         style={{
-          background:
-            "linear-gradient(to bottom right, rgba(240, 247, 255, 0.8), rgba(255, 255, 255, 0.8), rgba(245, 243, 255, 0.8))",
+          background: "var(--gradient-background)",
         }}
       />
 
@@ -214,7 +227,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
-              <span className="inline-block px-4 py-2 bg-blue-100/80 backdrop-blur-sm text-blue-800 rounded-full text-sm font-medium">
+              <span className="inline-block px-4 py-2 bg-primary/10 backdrop-blur-sm text-primary rounded-full text-sm font-medium">
                 👋 Welcome to my portfolio
               </span>
             </motion.div>
@@ -222,19 +235,19 @@ const HeroSection = () => {
             {/* Main Heading */}
             <div className="space-y-4">
               <motion.h1
-                className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
               >
                 Hi, I&apos;m{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">
                   Tan Hangsapho
                 </span>
               </motion.h1>
 
               <motion.h2
-                className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-700"
+                className="text-xl md:text-2xl lg:text-3xl font-semibold text-muted-foreground"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -245,7 +258,7 @@ const HeroSection = () => {
 
             {/* Description */}
             <motion.p
-              className="text-lg text-gray-600 max-w-2xl"
+              className="text-lg text-muted-foreground max-w-2xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
@@ -268,7 +281,7 @@ const HeroSection = () => {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1 + index * 0.1, duration: 0.5 }}
-                  className="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-lg text-sm font-medium text-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300"
+                  className="px-4 py-2 bg-background/80 backdrop-blur-sm rounded-lg text-sm font-medium text-foreground shadow-sm hover:shadow-md transition-shadow duration-300 border"
                 >
                   {tech}
                 </motion.span>
@@ -291,7 +304,7 @@ const HeroSection = () => {
                     "_blank"
                   )
                 }
-                className="px-6 py-3 bg-blue-600/90 backdrop-blur-sm text-white rounded-xl hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                className="px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
               >
                 <Eye className="w-5 h-5" />
                 View CV
@@ -307,7 +320,7 @@ const HeroSection = () => {
             className="relative order-first lg:order-last"
           >
             <div className="relative max-w-md mx-auto">
-              <div className="relative aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-blue-100/50 to-purple-100/50 backdrop-blur-sm shadow-2xl">
+              <div className="relative aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-primary/10 to-purple-500/10 backdrop-blur-sm shadow-2xl">
                 <Image
                   width={500}
                   height={500}
@@ -325,9 +338,9 @@ const HeroSection = () => {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="absolute -right-4 -top-4 bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow-lg"
+                className="absolute -right-4 -top-4 bg-background/80 backdrop-blur-sm p-4 rounded-xl shadow-lg border"
               >
-                <span className="text-sm font-medium whitespace-nowrap">
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">
                   🚀 Open to Work
                 </span>
               </motion.div>
@@ -340,9 +353,9 @@ const HeroSection = () => {
                   ease: "easeInOut",
                   delay: 1,
                 }}
-                className="absolute -left-4 -bottom-4 bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow-lg"
+                className="absolute -left-4 b -bottom-7 bg-background/80 backdrop-blur-sm p-4 rounded-xl shadow-lg border"
               >
-                <span className="text-sm font-medium whitespace-nowrap">
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">
                   💻 Full Stack Developer
                 </span>
               </motion.div>
@@ -361,8 +374,10 @@ const HeroSection = () => {
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <span className="text-sm text-gray-500">Scroll to explore</span>
-            <ChevronDown className="w-6 h-6 text-gray-400 mx-auto mt-1" />
+            <span className="text-sm text-muted-foreground">
+              Scroll to explore
+            </span>
+            <ChevronDown className="w-6 h-6 text-muted-foreground mx-auto mt-1" />
           </motion.div>
         </motion.div>
       </div>

@@ -12,7 +12,7 @@ export const ContactSection = () => {
   return (
     <motion.section
       ref={contactRef}
-      className="py-24 bg-gradient-to-b from-blue-50 to-white"
+      className="py-24 bg-gradient-to-b from-background/50 to-background"
       initial={{ opacity: 0 }}
       animate={isContactInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.8 }}
@@ -26,40 +26,44 @@ export const ContactSection = () => {
           }
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-foreground mb-4">
             Let&apos;s Connect
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-muted-foreground mb-8">
             I&apos;m currently open to new opportunities and interesting
             projects. Feel free to reach out!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             <motion.div
-              className="p-6 bg-white rounded-xl shadow-lg"
+              className="p-6 bg-card rounded-xl shadow-lg border border-border"
               whileHover={{ y: -5 }}
             >
-              <Mail className="w-8 h-8 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Email Me</h3>
+              <Mail className="w-8 h-8 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Email Me
+              </h3>
               <a
-                href="mailto:your.email@example.com"
-                className="text-blue-600 hover:text-blue-700"
+                href="mailto:hangsaphotan@gmail.com"
+                className="text-primary hover:text-primary/90"
               >
                 hangsaphotan@gmail.com
               </a>
             </motion.div>
 
             <motion.div
-              className="p-6 bg-white rounded-xl shadow-lg"
+              className="p-6 bg-card rounded-xl shadow-lg border border-border"
               whileHover={{ y: -5 }}
             >
-              <Facebook className="w-8 h-8 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Social Media</h3>
+              <Facebook className="w-8 h-8 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Social Media
+              </h3>
               <a
                 href="https://www.facebook.com/sadbabyyoda"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-700"
+                className="text-primary hover:text-primary/90"
               >
                 Pho
               </a>
@@ -71,7 +75,7 @@ export const ContactSection = () => {
               href="https://github.com/tanhangsapho"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-300"
+              className="inline-flex items-center px-6 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -83,7 +87,7 @@ export const ContactSection = () => {
               href="https://www.linkedin.com/in/hangsapho-tan-45b10426b/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
+              className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -95,7 +99,7 @@ export const ContactSection = () => {
               href="https://drive.google.com/file/d/1OunQR9djK8CL5V0SFJoBCncjCH6gYLnX/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-300"
+              className="inline-flex items-center px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

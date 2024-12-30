@@ -1,13 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, Sun, Moon, Github } from 'lucide-react';
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Settings, Sun, Moon, Github } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const FloatingButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme } = useTheme();
 
-  // Handle clicks outside to close the menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -15,9 +15,9 @@ const FloatingButton = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -25,16 +25,16 @@ const FloatingButton = () => {
     hover: {
       scale: 1.05,
       transition: {
-        duration: 0.2
-      }
-    }
+        duration: 0.2,
+      },
+    },
   };
 
   const menuVariants = {
     hidden: {
       opacity: 0,
       y: 20,
-      scale: 0.8
+      scale: 0.8,
     },
     visible: {
       opacity: 1,
@@ -43,30 +43,22 @@ const FloatingButton = () => {
       transition: {
         duration: 0.3,
         staggerChildren: 0.1,
-        when: "beforeChildren"
-      }
-    }
+        when: "beforeChildren",
+      },
+    },
   };
 
   const itemVariants = {
     hidden: {
       opacity: 0,
       y: 20,
-      scale: 0.8
+      scale: 0.8,
     },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1
-    }
-  };
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const handleGitHubClick = () => {
-    window.open('https://github.com/tanhangsapho', '_blank');
+      scale: 1,
+    },
   };
 
   return (
@@ -85,8 +77,10 @@ const FloatingButton = () => {
               <motion.button
                 variants={itemVariants}
                 whileHover={{ scale: 1.1 }}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={handleGitHubClick}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-background border shadow-lg text-foreground hover:bg-muted transition-colors"
+                onClick={() =>
+                  window.open("https://github.com/tanhangsapho", "_blank")
+                }
               >
                 <Github size={20} />
               </motion.button>
@@ -95,27 +89,27 @@ const FloatingButton = () => {
               <motion.button
                 variants={itemVariants}
                 whileHover={{ scale: 1.1 }}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg text-gray-700 hover:bg-gray-100 transition-colors"
-                onClick={toggleDarkMode}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-background border shadow-lg text-foreground hover:bg-muted transition-colors"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               >
-                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
               </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Main Floating Button - remains the same */}
+
         <motion.button
-          className={`flex items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-colors ${
-            isOpen ? 'bg-blue-700' : ''
+          className={`flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors ${
+            isOpen ? "bg-primary/90" : ""
           }`}
           variants={buttonVariants}
           whileHover="hover"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <Settings 
-            size={24} 
+          <Settings
+            size={24}
             className={`transition-transform duration-300 ${
-              isOpen ? 'rotate-180' : ''
+              isOpen ? "rotate-180" : ""
             }`}
           />
         </motion.button>

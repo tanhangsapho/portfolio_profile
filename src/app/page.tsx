@@ -35,16 +35,14 @@ const Home = () => {
         <title>Tan Hangsapho - Software Engineer</title>
         <meta
           name="description"
-          content="Professional portfolio of [Your Name] - Software Engineer"
+          content="Professional portfolio of Tan hangsapho - Software Engineer"
         />
       </Head>
       <FloatingButton />
-      {/* Hero Section */}
       <HeroSection />
       <section id="about" className="py-16">
         <AboutSection />
       </section>
-      {/* Projects Section */}
       <Project />
       <SkillSection />
       <ContactSection />

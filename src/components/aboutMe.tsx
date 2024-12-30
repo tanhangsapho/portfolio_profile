@@ -87,7 +87,13 @@ const TimelineSection = () => {
   };
 
   return (
-    <section ref={ref} className="py-16 bg-gradient-to-b from-white to-blue-50">
+    <section
+      ref={ref}
+      className="py-16 "
+      style={{
+        background: "var(--gradient-background)",
+      }}
+    >
       <div className="max-w-6xl mx-auto px-6">
         {/* Header Section */}
         <motion.div
@@ -96,10 +102,10 @@ const TimelineSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-foreground mb-4">
             Experience & Education
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Building digital solutions and continuously learning through
             practical experience and academic excellence.
           </p>
@@ -109,7 +115,7 @@ const TimelineSection = () => {
         {["experience", "education"].map((category) => (
           <div key={category} className="mb-16">
             <motion.h3
-              className="text-2xl font-semibold text-gray-800 mb-8 capitalize"
+              className="text-2xl font-semibold text-foreground mb-8 capitalize"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ delay: 0.2 }}
@@ -119,7 +125,7 @@ const TimelineSection = () => {
 
             <div className="relative">
               <motion.div
-                className="absolute left-[40px] top-0 bottom-0 w-0.5 bg-blue-200"
+                className="absolute left-[42px] top-0 bottom-0 w-0.5 bg-primary"
                 initial={{ scaleY: 0 }}
                 animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
                 transition={{ duration: 1, ease: "easeInOut" }}
@@ -139,37 +145,37 @@ const TimelineSection = () => {
                       className="relative pl-16"
                       variants={itemVariants}
                     >
-                      <div className="absolute left-0 p-2 bg-white rounded-full border border-blue-200">
+                      <div className="absolute left-0 p-2 bg-background rounded-full border border-border">
                         {item.icon}
                       </div>
 
                       <motion.div
-                        className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+                        className="bg-card p-6 rounded-xl shadow-sm border border-border"
                         variants={cardVariants}
                         whileHover="hover"
                       >
-                        <div className="text-sm font-medium text-blue-600 mb-2">
+                        <div className="text-sm font-medium text-primary mb-2">
                           {item.period}
                         </div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-1">
+                        <h4 className="text-xl font-semibold text-foreground mb-1">
                           {item.title}
                         </h4>
                         {item.subtitle && (
-                          <div className="text-md text-gray-700 mb-2">
+                          <div className="text-md text-muted-foreground mb-2">
                             {item.subtitle}
                           </div>
                         )}
-                        <div className="flex items-center text-gray-500 text-sm mb-3">
+                        <div className="flex items-center text-muted-foreground text-sm mb-3">
                           <MapPin className="w-4 h-4 mr-1" />
                           {item.location}
                         </div>
                         {item.description && (
-                          <p className="text-gray-600 mb-3">
+                          <p className="text-muted-foreground mb-3">
                             {item.description}
                           </p>
                         )}
                         {item.highlights && (
-                          <ul className="list-disc list-inside text-gray-600 space-y-1">
+                          <ul className="list-disc list-inside text-muted-foreground space-y-1">
                             {item.highlights.map((highlight, i) => (
                               <li key={i}>{highlight}</li>
                             ))}

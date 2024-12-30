@@ -6,7 +6,7 @@ import Image from "next/image";
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
     <motion.div
-      className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+      className="bg-card rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
       whileHover={{ y: -5 }}
     >
       <div className="relative h-48 overflow-hidden">
@@ -21,15 +21,19 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       </div>
 
       <div className="p-6">
-        <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-        <p className="text-gray-600 mb-4">{project.description}</p>
+        <h3 className="text-xl font-bold mb-2 text-muted-foreground ">
+          {project.title}
+        </h3>
+        <p className="text-gray-600 mb-4 text-muted-foreground ">
+          {project.description}
+        </p>
 
         {project.highlights && (
           <ul className="mb-4 space-y-1">
             {project.highlights.map((highlight, index) => (
               <li
                 key={index}
-                className="flex items-center text-sm text-gray-600"
+                className="flex items-center text-sm text-gray-600 text-muted-foreground "
               >
                 <Star className="w-4 h-4 mr-2 text-yellow-500" />
                 {highlight}
@@ -42,7 +46,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           {project.technologies.map((tech) => (
             <span
               key={tech}
-              className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full"
+              className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full "
             >
               {tech}
             </span>
@@ -54,7 +58,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+            className="flex items-center text-gray-700 hover:text-blue-600 transition-colors text-muted-foreground "
           >
             <Github className="w-5 h-5 mr-1" />
             Code
@@ -64,7 +68,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+              className="flex items-center text-gray-700 hover:text-blue-600 transition-colors text-muted-foreground "
             >
               <ExternalLink className="w-5 h-5 mr-1" />
               Live Demo

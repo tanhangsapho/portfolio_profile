@@ -5,28 +5,30 @@ import { SkillCardProps } from "./type";
 export const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
   return (
     <motion.div
-      className="bg-white p-6 rounded-xl shadow-lg"
+      className="bg-card p-6 rounded-xl shadow-lg border border-border"
       whileHover={{ y: -5 }}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <h3 className="text-xl font-bold mb-4">{category}</h3>
+      <h3 className="text-xl font-bold text-foreground  mb-4">{category}</h3>
       <div className="space-y-4">
         {skills[category].map((skill, index) => (
           <div key={index}>
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center">
-                <span className="text-gray-700">{skill.name}</span>
+                <span className="text-gray-700 text-muted-foreground">
+                  {skill.name}
+                </span>
               </div>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-muted-foreground">
                 {skill.proficiency}%
               </span>
             </div>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2 bg-secondary rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-blue-600 rounded-full"
+                className="h-full bg-primary rounded-full"
                 initial={{ width: 0 }}
                 whileInView={{ width: `${skill.proficiency}%` }}
                 viewport={{ once: true }}
@@ -75,7 +77,10 @@ const SkillSection = () => {
       {/* Skills Section */}
       <motion.section
         ref={skillsRef}
-        className="py-24 bg-white"
+        className="py-24"
+        style={{
+          background: "var(--gradient-background)",
+        }}
         initial={{ opacity: 0 }}
         animate={isSkillsInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.8 }}
@@ -89,10 +94,10 @@ const SkillSection = () => {
             }
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
               Technical Skills
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               A comprehensive overview of my technical expertise and proficiency
               across different areas of software development.
             </p>
