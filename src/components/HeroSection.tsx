@@ -6,7 +6,6 @@ import * as THREE from "three";
 
 const HeroSection = () => {
   const canvasRef = useRef(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
   const technologies = [
     "React",
     "TypeScript",
@@ -18,10 +17,11 @@ const HeroSection = () => {
 
   useEffect(() => {
     if (!canvasRef.current) return;
-    // Scene setup with improved rendering
+
+    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      60,
+      75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
@@ -30,37 +30,27 @@ const HeroSection = () => {
       canvas: canvasRef.current,
       alpha: true,
       antialias: true,
-      powerPreference: "high-performance",
     });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Enhanced particles setup
+    // Particles setup
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 150;
+    const particlesCount = 100;
     const positions = new Float32Array(particlesCount * 3);
     const colors = new Float32Array(particlesCount * 3);
-    const speeds = new Float32Array(particlesCount);
 
-    // Create particles in a sphere distribution
+    // Create random positions and colors for particles
     for (let i = 0; i < particlesCount; i++) {
-      const radius = 25 + Math.random() * 10;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
+      positions[i * 3] = (Math.random() - 0.5) * 50; // x
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 50; // y
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 50; // z
 
-      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      positions[i * 3 + 2] = radius * Math.cos(phi);
-
-      // Enhanced gradient colors
-      const hue = Math.random() * 0.1 + 0.6;
-      const color = new THREE.Color().setHSL(hue, 0.8, 0.6);
-      colors[i * 3] = color.r;
-      colors[i * 3 + 1] = color.g;
-      colors[i * 3 + 2] = color.b;
-
-      speeds[i] = Math.random() * 0.02 + 0.01;
+      // Gradient colors from blue to purple
+      colors[i * 3] = 0.4 + Math.random() * 0.2; // R (blue-ish)
+      colors[i * 3 + 1] = 0.4 + Math.random() * 0.2; // G (purple-ish)
+      colors[i * 3 + 2] = 0.8 + Math.random() * 0.2; // B
     }
 
     particlesGeometry.setAttribute(
@@ -72,108 +62,77 @@ const HeroSection = () => {
       new THREE.BufferAttribute(colors, 3)
     );
 
-    // Enhanced shader material for particles
+    // Custom shader material for particles
     const particlesMaterial = new THREE.ShaderMaterial({
       vertexShader: `
         attribute vec3 color;
-        attribute float size;
         varying vec3 vColor;
         void main() {
           vColor = color;
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
           gl_Position = projectionMatrix * mvPosition;
-          gl_PointSize = 4.0 * (300.0 / -mvPosition.z);
+          gl_PointSize = 3.0 * (300.0 / -mvPosition.z);
         }
       `,
       fragmentShader: `
         varying vec3 vColor;
         void main() {
           float dist = length(gl_PointCoord - vec2(0.5));
-          float alpha = 1.0 - smoothstep(0.45, 0.5, dist);
-          gl_FragColor = vec4(vColor, alpha);
+          if (dist > 0.5) discard;
+          gl_FragColor = vec4(vColor, 1.0);
         }
       `,
       transparent: true,
       vertexColors: true,
-      blending: THREE.AdditiveBlending,
     });
 
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particles);
 
-    // Enhanced line material with gradient
-    const lineMaterial = new THREE.ShaderMaterial({
-      vertexShader: `
-        varying vec3 vPosition;
-        void main() {
-          vPosition = position;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vPosition;
-        void main() {
-          float intensity = 1.0 - length(vPosition) / 50.0;
-          vec3 color = mix(vec3(0.5, 0.5, 1.0), vec3(0.8, 0.5, 1.0), intensity);
-          gl_FragColor = vec4(color, intensity * 0.3);
-        }
-      `,
+    // Lines setup
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x8080ff,
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.2,
     });
 
     const lines = new THREE.Group();
     scene.add(lines);
 
-    camera.position.z = 40;
-    // const targetCameraPos = new THREE.Vector3(0, 0, 40);
+    // Camera position
+    camera.position.z = 30;
 
-    // Enhanced mouse interaction
+    // Mouse interaction
+    const mouse = new THREE.Vector2();
+    const windowHalf = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+    };
+
     const handleMouseMove = (event: MouseEvent) => {
-      mouseRef.current = {
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1,
-      };
+      mouse.x = (event.clientX - windowHalf.x) / windowHalf.x;
+      mouse.y = (event.clientY - windowHalf.y) / windowHalf.y;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Improved animation loop
-    let frame = 0;
+    // Animation
     const animate = () => {
-      frame = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
 
-      // Smooth particle movement
-      const positions = particlesGeometry.attributes.position
-        .array as Float32Array;
-      for (let i = 0; i < particlesCount; i++) {
-        const idx = i * 3;
-        // const radius = Math.sqrt(
-        //   positions[idx] ** 2 +
-        //     positions[idx + 1] ** 2 +
-        //     positions[idx + 2] ** 2
-        // );
+      // Rotate particles slowly
+      particles.rotation.x += 0.0003;
+      particles.rotation.y += 0.0005;
 
-        // Rotate particles in different orbits
-        const angle = speeds[i] * performance.now() * 0.001;
-        const x = positions[idx];
-        const z = positions[idx + 2];
-
-        positions[idx] = x * Math.cos(angle) - z * Math.sin(angle);
-        positions[idx + 2] = x * Math.sin(angle) + z * Math.cos(angle);
-      }
-      particlesGeometry.attributes.position.needsUpdate = true;
-
-      // Smooth camera movement
-      const targetX = mouseRef.current.x * 5;
-      const targetY = mouseRef.current.y * 5;
-      camera.position.x += (targetX - camera.position.x) * 0.02;
-      camera.position.y += (targetY - camera.position.y) * 0.02;
+      // Move camera slightly based on mouse position
+      camera.position.x += (mouse.x * 2 - camera.position.x) * 0.05;
+      camera.position.y += (-mouse.y * 2 - camera.position.y) * 0.05;
       camera.lookAt(scene.position);
 
-      // Dynamic line connections
+      // Update particle connections
       lines.children.forEach((line) => line.removeFromParent());
 
+      const positions = particlesGeometry.attributes.position.array;
       for (let i = 0; i < particlesCount; i++) {
         const p1 = new THREE.Vector3(
           positions[i * 3],
@@ -190,7 +149,7 @@ const HeroSection = () => {
 
           const distance = p1.distanceTo(p2);
 
-          if (distance < 12) {
+          if (distance < 10) {
             const lineGeometry = new THREE.BufferGeometry().setFromPoints([
               p1,
               p2,
@@ -204,22 +163,23 @@ const HeroSection = () => {
       renderer.render(scene, camera);
     };
 
-    // Improved resize handler
+    // Handle window resize
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      windowHalf.x = window.innerWidth / 2;
+      windowHalf.y = window.innerHeight / 2;
     };
 
     window.addEventListener("resize", handleResize);
+
     animate();
 
     // Cleanup
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(frame);
       scene.remove(particles);
       scene.remove(lines);
       particlesGeometry.dispose();
@@ -269,7 +229,7 @@ const HeroSection = () => {
               >
                 Hi, I&apos;m{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                  Tan hangsapho
+                  Tan Hangsapho
                 </span>
               </motion.h1>
 
@@ -325,7 +285,12 @@ const HeroSection = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.open("/your-cv-link", "_blank")}
+                onClick={() =>
+                  window.open(
+                    "https://drive.google.com/file/d/1OunQR9djK8CL5V0SFJoBCncjCH6gYLnX/view?usp=sharing",
+                    "_blank"
+                  )
+                }
                 className="px-6 py-3 bg-blue-600/90 backdrop-blur-sm text-white rounded-xl hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
               >
                 <Eye className="w-5 h-5" />
