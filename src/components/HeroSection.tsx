@@ -144,7 +144,7 @@ const HeroSection = () => {
 
     // Smooth animation
     const clock = new THREE.Clock();
-    let currentRotation = new THREE.Vector2();
+    const currentRotation = new THREE.Vector2();
 
     const animate = () => {
       const time = clock.getElapsedTime();
