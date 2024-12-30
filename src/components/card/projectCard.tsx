@@ -1,132 +1,77 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Github } from 'lucide-react';
-import Image from 'next/image';
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  technologies: string[];
-  imageUrl: string;
-  projectUrl: string;
-  githubUrl?: string;
-}
+import { motion } from "framer-motion";
+import { Star, Github, ExternalLink } from "lucide-react";
+import { ProjectCardProps } from "../type";
+import Image from "next/image";
 
-export const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
-  const cardVariants = {
-    hidden: {
-      opacity: 0,
-      y: 50
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const contentVariants = {
-    hidden: {
-      opacity: 0,
-      y: 20
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 0.2,
-        duration: 0.5
-      }
-    }
-  };
-
-  const linkButtonVariants = {
-    initial: { 
-      opacity: 0,
-      y: 20 
-    },
-    hover: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.3
-      }
-    }
-  };
-
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
     <motion.div
-      className="relative group rounded-lg overflow-hidden bg-white shadow-lg"
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
+      className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+      whileHover={{ y: -5 }}
     >
-      {/* Image Container */}
-      <div className="relative h-48 w-full overflow-hidden">
+      <div className="relative h-48 overflow-hidden">
         <Image
-        width={500}
-        height={500}
           src={project.imageUrl}
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          height={200}
+          width={200}
+          className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
         />
-        {/* Overlay with links */}
-        <motion.div 
-          className="absolute inset-0 bg-black/60 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          initial="initial"
-          whileHover="hover"
-        >
-          {/* <motion.a
-            href={project.projectUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
-            variants={linkButtonVariants}
-          >
-            <ExternalLink className="w-6 h-6 text-gray-800" />
-          </motion.a> */}
-          
-          {project.githubUrl && (
-            <motion.a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
-              variants={linkButtonVariants}
-            >
-              <Github className="w-6 h-6 text-gray-800" />
-            </motion.a>
-          )}
-        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
       </div>
 
-      {/* Content */}
-      <motion.div 
-        className="p-6"
-        variants={contentVariants}
-      >
-        <h3 className="text-xl font-bold mb-2 text-gray-800">
-          {project.title}
-        </h3>
-        <p className="text-gray-600 mb-4">
-          {project.description}
-        </p>
-        <div className="flex flex-wrap gap-2">
+      <div className="p-6">
+        <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+        <p className="text-gray-600 mb-4">{project.description}</p>
+
+        {project.highlights && (
+          <ul className="mb-4 space-y-1">
+            {project.highlights.map((highlight, index) => (
+              <li
+                key={index}
+                className="flex items-center text-sm text-gray-600"
+              >
+                <Star className="w-4 h-4 mr-2 text-yellow-500" />
+                {highlight}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.map((tech) => (
             <span
               key={tech}
-              className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
+              className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full"
             >
               {tech}
             </span>
           ))}
         </div>
-      </motion.div>
+
+        <div className="flex space-x-4">
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+          >
+            <Github className="w-5 h-5 mr-1" />
+            Code
+          </a>
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+            >
+              <ExternalLink className="w-5 h-5 mr-1" />
+              Live Demo
+            </a>
+          )}
+        </div>
+      </div>
     </motion.div>
   );
 };
-
-export default ProjectCard;
