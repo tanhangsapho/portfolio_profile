@@ -31,6 +31,7 @@ const SkillSection = () => {
       { name: "Figma", proficiency: 80 },
     ],
   };
+  console.log("Hello, World!");
 
   return (
     <>
