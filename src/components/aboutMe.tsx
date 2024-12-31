@@ -13,7 +13,7 @@ const TimelineSection = () => {
       title: "Full Stack Web Development at SabaiCode",
       location: "Chrouy Changvar, Phnom Penh, Cambodia",
       description:
-        "Built full-stack applications using Next, Node.js, and Mongodb. Key projects include:",
+        "Built full-stack applications using Next, Node.js, and Mongodb.",
       highlights: [],
       icon: <Code className="w-5 h-5" />,
       category: "experience",
