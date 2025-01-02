@@ -18,24 +18,17 @@ const FloatingButton = () => {
 
       const footerRect = footer.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const buttonHeight = 48; // height of button in pixels
-      const defaultBottomSpacing = 32; // default bottom spacing in pixels
-
+      const defaultBottomSpacing = 32;
       if (footerRect.top <= viewportHeight) {
-        // Place button dynamically above the footer
         const overlapDistance = viewportHeight - footerRect.top + defaultBottomSpacing;
         setButtonBottom(overlapDistance);
-        setShowScrollTop(true); // Switch to ArrowUp button near the footer
+        setShowScrollTop(true); 
       } else {
         setButtonBottom(defaultBottomSpacing);
         setShowScrollTop(false);
       }
     };
-
-    // Initial check
     handleScroll();
-
-    // Add scroll event listener
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);

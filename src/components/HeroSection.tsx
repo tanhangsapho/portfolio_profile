@@ -19,8 +19,6 @@ const HeroSection = () => {
   ];
   useEffect(() => {
     if (!canvasRef.current) return;
-
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -38,7 +36,6 @@ const HeroSection = () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
 
-    // Create DNA strands
     const createStrand = () => {
       const points: THREE.Vector3[] = [];
       const radius = 8;
@@ -93,7 +90,6 @@ const HeroSection = () => {
       blending: THREE.AdditiveBlending,
     });
 
-    // Create multiple DNA strands
     const strands: THREE.Points[] = [];
     const strandCount = 3;
 
@@ -101,7 +97,6 @@ const HeroSection = () => {
       const points = createStrand();
       const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-      // Add random offset for each point
       const positionAttribute = geometry.getAttribute("position");
       const positions = positionAttribute.array;
       for (let j = 0; j < positions.length; j += 3) {
