@@ -93,6 +93,7 @@ const TimelineSection = () => {
       style={{
         background: "var(--gradient-background)",
       }}
+      id="about"
     >
       <div className="max-w-6xl mx-auto px-6">
         {/* Header Section */}

@@ -202,8 +202,14 @@ const HeroSection = () => {
     };
   }, []);
 
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative w-full min-h-screen flex flex-col items-center overflow-hidden">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full -z-10"
@@ -353,7 +359,7 @@ const HeroSection = () => {
                   ease: "easeInOut",
                   delay: 1,
                 }}
-                className="absolute -left-4 b -bottom-7 bg-background/80 backdrop-blur-sm p-4 rounded-xl shadow-lg border"
+                className="absolute -left-4 -bottom-7 bg-background/80 backdrop-blur-sm p-4 rounded-xl shadow-lg border"
               >
                 <span className="text-sm font-medium text-foreground whitespace-nowrap">
                   💻 Full Stack Developer
@@ -368,13 +374,16 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.6, duration: 0.8 }}
-          className="absolute -bottom-0 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
+          className="absolute bottom-4 left-0 right-0 flex justify-center"
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <span className="text-sm text-muted-foreground">
+            <span
+              className="text-sm text-muted-foreground cursor-pointer"
+              onClick={scrollToAbout}
+            >
               Scroll to explore
             </span>
             <ChevronDown className="w-6 h-6 text-muted-foreground mx-auto mt-1" />
