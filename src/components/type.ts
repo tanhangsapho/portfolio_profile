@@ -37,6 +37,22 @@ export interface SkillCardProps {
   skills: SkillsByCategory;
 }
 
+export interface TimelineItem {
+  period: string;
+  title: string;
+  subtitle?: string;
+  location: string;
+  description?: string;
+  highlights?: string[];
+  icon: React.ReactNode;
+  category: "experience" | "education"; 
+}
+
+export interface CategoryProps {
+  ref: React.RefObject<HTMLDivElement>;
+  isInView: boolean;
+}
+
 export const projects: Project[] = [
   {
     id: "1",

@@ -1,5 +1,3 @@
-"use client";
-import { useState, useEffect } from "react";
 import Head from "next/head";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/aboutMe";
@@ -9,25 +7,6 @@ import SkillSection from "@/components/Skill";
 import { Project } from "@/components/Project";
 
 const Home = () => {
-  const [activeSection, setActiveSection] = useState("home");
-  console.log(activeSection);
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["home", "projects", "skills", "contact"];
-      const currentSection = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (currentSection) setActiveSection(currentSection);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <div className="min-h-screen">
@@ -40,9 +19,7 @@ const Home = () => {
       </Head>
       <FloatingButton />
       <HeroSection />
-      <section id="about" className="py-16">
-        <AboutSection />
-      </section>
+      <AboutSection />
       <Project />
       <SkillSection />
       <ContactSection />

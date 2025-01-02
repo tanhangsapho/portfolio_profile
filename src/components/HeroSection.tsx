@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Eye } from "lucide-react";
@@ -374,7 +375,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.6, duration: 0.8 }}
-          className="absolute bottom-4 left-0 right-0 flex justify-center"
+          className="absolute bottom-0 left-0 right-0 flex justify-center"
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}
