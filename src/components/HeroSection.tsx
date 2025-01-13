@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Eye } from "lucide-react";
@@ -375,11 +375,10 @@ const HeroSection = () => {
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
+            className="cursor-pointer"
+            onClick={scrollToAbout}
           >
-            <span
-              className="text-sm text-muted-foreground cursor-pointer"
-              onClick={scrollToAbout}
-            >
+            <span className="text-sm text-muted-foreground cursor-pointer">
               Scroll to explore
             </span>
             <ChevronDown className="w-6 h-6 text-muted-foreground mx-auto mt-1" />
