@@ -16,7 +16,7 @@ export const Project = () => {
 
   const isHeaderInView = useInView(headerRef, {
     once: false,
-    amount: 0.2,
+    amount: 0.3,
     margin: "-100px 0px -100px 0px",
   });
 
