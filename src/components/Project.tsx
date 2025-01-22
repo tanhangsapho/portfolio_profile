@@ -16,7 +16,7 @@ export const Project = () => {
 
   const isHeaderInView = useInView(headerRef, {
     once: false,
-    amount: 0.3,
+    amount: 0.2,
     margin: "-100px 0px -100px 0px",
   });
 
@@ -74,11 +74,24 @@ export const Project = () => {
     >
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
-          ref={headerRef}
           className="text-center mb-16"
           initial="hidden"
-          animate={isHeaderInView ? "visible" : "hidden"}
-          variants={headerVariants}
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 20,
+            },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.8,
+                ease: "easeOut",
+              },
+            },
+          }}
         >
           <h2 className="text-4xl font-bold text-foreground mb-4">
             Featured Projects
