@@ -58,7 +58,6 @@ const ANIMATION_VARIANTS = {
   },
 } as const;
 
-// Custom hook for scroll handling
 const useScrollHandler = (
   setMenuState: React.Dispatch<React.SetStateAction<MenuState>>
 ) => {

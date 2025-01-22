@@ -1,25 +1,24 @@
-"use client"
+"use client";
 import React from "react";
 import { MapPin, Code, Book } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { CategoryProps, TimelineItem } from "./type";
 
-
 const TimelineSection = () => {
   const experienceRef = useRef<HTMLDivElement>(null);
   const educationRef = useRef<HTMLDivElement>(null);
-  
+
   const isExperienceInView = useInView(experienceRef, {
-    once: true,
+    once: false, // Changed to false to allow replay
     amount: 0.2,
-    margin: "-100px 0px -100px 0px"
+    margin: "-100px 0px -100px 0px",
   });
-  
+
   const isEducationInView = useInView(educationRef, {
-    once: true,
+    once: false, // Changed to false to allow replay
     amount: 0.2,
-    margin: "-100px 0px -100px 0px"
+    margin: "-100px 0px -100px 0px",
   });
 
   const experienceItems: TimelineItem[] = [
@@ -71,9 +70,9 @@ const TimelineSection = () => {
   ];
 
   const containerVariants = {
-    hidden: { 
+    hidden: {
       opacity: 0,
-      y: 50
+      y: 50,
     },
     visible: {
       opacity: 1,
@@ -81,16 +80,16 @@ const TimelineSection = () => {
       transition: {
         staggerChildren: 0.2,
         duration: 0.6,
-        ease: "easeOut"
+        ease: "easeOut",
       },
     },
   };
 
   const itemVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 30,
-      scale: 0.95
+      scale: 0.95,
     },
     visible: {
       opacity: 1,
@@ -98,7 +97,7 @@ const TimelineSection = () => {
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
+        ease: "easeOut",
       },
     },
   };
@@ -106,20 +105,21 @@ const TimelineSection = () => {
   const cardVariants = {
     initial: {
       scale: 1,
-      boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+      boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
     },
     hover: {
       scale: 1.02,
       boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
       transition: {
         duration: 0.3,
-        ease: "easeOut"
+        ease: "easeOut",
       },
     },
   };
 
-  // Function to get the appropriate ref and inView state for each category
-  const getCategoryProps = (category: "experience" | "education"): CategoryProps => {
+  const getCategoryProps = (
+    category: "experience" | "education"
+  ): CategoryProps => {
     if (category === "experience") {
       return { ref: experienceRef, isInView: isExperienceInView };
     }
@@ -138,7 +138,9 @@ const TimelineSection = () => {
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: -20 }}
-          animate={isExperienceInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+          animate={
+            isExperienceInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }
+          }
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -152,13 +154,15 @@ const TimelineSection = () => {
 
         {(["experience", "education"] as const).map((category) => {
           const { ref, isInView } = getCategoryProps(category);
-          
+
           return (
             <div key={category} className="mb-16" ref={ref}>
               <motion.h3
                 className="text-2xl font-semibold text-foreground mb-8 capitalize"
                 initial={{ opacity: 0, x: -20 }}
-                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                animate={
+                  isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
+                }
                 transition={{ delay: 0.3 }}
               >
                 {category}
@@ -187,7 +191,7 @@ const TimelineSection = () => {
                         variants={itemVariants}
                         custom={index}
                       >
-                        <motion.div 
+                        <motion.div
                           className="absolute left-0 p-2 bg-background rounded-full border border-border"
                           initial={{ scale: 0 }}
                           animate={isInView ? { scale: 1 } : { scale: 0 }}

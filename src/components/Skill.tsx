@@ -1,22 +1,60 @@
-"use client"
+"use client";
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { SkillCardProps } from "./type";
 
 export const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
+  const cardRef = useRef(null);
+  const isCardInView = useInView(cardRef, {
+    once: false,
+    amount: 0.2,
+    margin: "-50px 0px -50px 0px",
+  });
+
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 30,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
     <motion.div
+      ref={cardRef}
       className="bg-card p-6 rounded-xl shadow-lg border border-border"
-      whileHover={{ y: -5 }}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      variants={cardVariants}
+      initial="hidden"
+      animate={isCardInView ? "visible" : "hidden"}
+      whileHover={{
+        y: -8,
+        transition: { duration: 0.3, ease: "easeOut" },
+      }}
     >
-      <h3 className="text-xl font-bold text-foreground  mb-4">{category}</h3>
+      <h3 className="text-xl font-bold text-foreground mb-4">{category}</h3>
       <div className="space-y-4">
         {skills[category].map((skill, index) => (
-          <div key={index}>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: -20 }}
+            animate={
+              isCardInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
+            }
+            transition={{
+              duration: 0.6,
+              delay: index * 0.15,
+              ease: "easeOut",
+            }}
+          >
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center">
                 <span className="text-gray-700 text-muted-foreground">
@@ -31,12 +69,19 @@ export const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
               <motion.div
                 className="h-full bg-primary rounded-full"
                 initial={{ width: 0 }}
-                whileInView={{ width: `${skill.proficiency}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: index * 0.1 }}
+                animate={
+                  isCardInView
+                    ? { width: `${skill.proficiency}%` }
+                    : { width: 0 }
+                }
+                transition={{
+                  duration: 1.2,
+                  delay: index * 0.15 + 0.3,
+                  ease: "easeOut",
+                }}
               />
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </motion.div>
@@ -45,8 +90,19 @@ export const SkillCard: React.FC<SkillCardProps> = ({ category, skills }) => {
 
 const SkillSection = () => {
   const skillsRef = useRef(null);
+  const headerRef = useRef(null);
 
-  const isSkillsInView = useInView(skillsRef, { once: true, amount: 0.2 });
+  const isSkillsInView = useInView(skillsRef, {
+    once: false,
+    amount: 0.2,
+    margin: "-100px 0px -100px 0px",
+  });
+
+  const isHeaderInView = useInView(headerRef, {
+    once: false,
+    amount: 0.2,
+    margin: "-100px 0px -100px 0px",
+  });
 
   const skills = {
     Frontend: [
@@ -73,47 +129,67 @@ const SkillSection = () => {
     ],
   };
 
-  return (
-    <>
-      {/* Skills Section */}
-      <motion.section
-        ref={skillsRef}
-        className="py-24"
-        style={{
-          background: "var(--gradient-background)",
-        }}
-        initial={{ opacity: 0 }}
-        animate={isSkillsInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={
-              isSkillsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-            }
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Technical Skills
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A comprehensive overview of my technical expertise and proficiency
-              across different areas of software development.
-            </p>
-          </motion.div>
+  const containerVariants = {
+    hidden: {
+      opacity: 0,
+      y: 30,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1,
+        ease: "easeOut",
+        staggerChildren: 0.2,
+      },
+    },
+  };
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {(Object.keys(skills) as Array<keyof typeof skills>).map(
-              (category) => (
-                <SkillCard key={category} category={category} skills={skills} />
-              )
-            )}
-          </div>
-        </div>
-      </motion.section>
-    </>
+  return (
+    <motion.section
+      ref={skillsRef}
+      className="py-24"
+      style={{
+        background: "var(--gradient-background)",
+      }}
+      initial="hidden"
+      animate={isSkillsInView ? "visible" : "hidden"}
+      variants={containerVariants}
+    >
+      <div className="max-w-6xl mx-auto px-6">
+        <motion.div
+          ref={headerRef}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={
+            isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+          }
+          transition={{
+            duration: 1,
+            ease: "easeOut",
+          }}
+        >
+          <h2 className="text-4xl font-bold text-foreground mb-4">
+            Technical Skills
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            A comprehensive overview of my technical expertise and proficiency
+            across different areas of software development.
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          variants={containerVariants}
+        >
+          {(Object.keys(skills) as Array<keyof typeof skills>).map(
+            (category) => (
+              <SkillCard key={category} category={category} skills={skills} />
+            )
+          )}
+        </motion.div>
+      </div>
+    </motion.section>
   );
 };
 
