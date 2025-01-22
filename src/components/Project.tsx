@@ -6,7 +6,7 @@ import { ProjectCard } from "./card/projectCard";
 
 export const Project = () => {
   const projectsRef = useRef(null);
-  const headerRef = useRef(null);
+  // const headerRef = useRef(null);
 
   const isProjectsInView = useInView(projectsRef, {
     once: false,
@@ -14,11 +14,11 @@ export const Project = () => {
     margin: "-100px 0px -100px 0px",
   });
 
-  const isHeaderInView = useInView(headerRef, {
-    once: false,
-    amount: 0.2,
-    margin: "-100px 0px -100px 0px",
-  });
+  // const isHeaderInView = useInView(headerRef, {
+  //   once: false,
+  //   amount: 0.2,
+  //   margin: "-100px 0px -100px 0px",
+  // });
 
   const containerVariants = {
     hidden: {
@@ -36,20 +36,20 @@ export const Project = () => {
     },
   };
 
-  const headerVariants = {
-    hidden: {
-      opacity: 0,
-      y: 30,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 1,
-        ease: "easeOut",
-      },
-    },
-  };
+  // const headerVariants = {
+  //   hidden: {
+  //     opacity: 0,
+  //     y: 30,
+  //   },
+  //   visible: {
+  //     opacity: 1,
+  //     y: 0,
+  //     transition: {
+  //       duration: 1,
+  //       ease: "easeOut",
+  //     },
+  //   },
+  // };
 
   return (
     <motion.section
